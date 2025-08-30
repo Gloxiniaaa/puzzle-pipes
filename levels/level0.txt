@@ -1,0 +1,12 @@
+[GRID]
+grid_size=4
+cell_size=100
+
+[TILES]
+e2 e0 e0 v2
+v0 t1 v3 l0
+e1 e1 t3 t2
+v2 l1 l0 v1
+
+[SOURCE]
+2 2
