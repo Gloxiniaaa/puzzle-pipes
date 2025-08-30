@@ -77,21 +77,27 @@ class GameState:
                     if (-dr, -dc) in [DIRS[d] for d in PIPE_TYPES[neighbor.type][neighbor.rotation % len(PIPE_TYPES[neighbor.type])]]:
                         frontier.append((nr, nc))
         return len(visited) == len(self.tiles)
-
+    
     def get_possible_actions(self):
         actions = []
         for pos, tile in self.tiles.items():
             variations = PIPE_TYPES[tile.type]
             for rot in range(len(variations)):
                 if rot != tile.rotation:
-                    # optimization: avoid end-to-end facing
                     if tile.type == "e":
-                        # skip if would face another end
+                        # skip if would face another end or the edge
+                        valid = True
                         for (dr, dc) in [DIRS[d] for d in PIPE_TYPES[tile.type][rot]]:
                             nr, nc = pos[0] + dr, pos[1] + dc
+                            # Check if facing another end
                             if (nr, nc) in self.tiles and self.tiles[(nr, nc)].type == "e":
+                                valid = False
                                 break
-                        else:
+                            # Check if facing the edge
+                            if nr < 0 or nr >= self.grid_size or nc < 0 or nc >= self.grid_size:
+                                valid = False
+                                break
+                        if valid:
                             actions.append(Action(pos, rot))
                     else:
                         actions.append(Action(pos, rot))
